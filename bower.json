@@ -1,7 +1,25 @@
 {
   "name": "static-openstreetmap",
   "version": "0.0.0",
+  "homepage": "https://github.com/warpech/static-openstreetmap",
+  "authors": [
+    "Marcin Warpechowski <marcin@nextgen.pl>",
+    "Tomek Wytrebowicz <tomalecpub@gmail.com>"
+  ],
+  "description": "Polymer Element that displays a static map (using OpenStreetMap) of a provided address.",
+  "main": "src/static-openstreetmap.html",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "openstreetmap"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
   "dependencies": {
-    "polymer": "Polymer/polymer"
+    "polymer": "Polymer/polymer#~0.2"
   }
 }
