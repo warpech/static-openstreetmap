@@ -5,24 +5,22 @@ license that can be found in the LICENSE file.
 -->
 <polymer-element name="static-openstreetmap" attributes="query width height zoom lat lng">
   <template>
-    <img hidden?="{{ !loaded }}"
+    <img hidden?="{{ lat==null || lng==null }}"
     src="http://staticmap.openstreetmap.de/staticmap.php?center={{lat}},{{lng}}&zoom={{zoom}}&size={{width}}x{{height}}">
   </template>
   <script>
     Polymer('static-openstreetmap', {
-      loaded: false,
       width: 500,
       height: 355,
-      zoom: 11,
-      lat: 0,
-      lng: 0,
+      zoom: 1,
+      lat: null,
+      lng: null,
       _cache: {},
       enteredView: function () {
       },
       _loadData: function (data) {
         this.lat = data.lat;
         this.lng = data.lon;
-        this.loaded = true;
       },
       queryChanged: function () {
         if (this._cache[this.query]) {
@@ -30,7 +28,6 @@ license that can be found in the LICENSE file.
           return;
         }
 
-        this.loaded = false;
         var that = this;
         var oReq = new XMLHttpRequest();
         oReq.onload = function reqListener() {

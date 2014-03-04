@@ -1,7 +1,7 @@
 # &lt;static-openstreetmap&gt;
 
 `<static-openstreetmap>` is a [Polymer](http://www.polymer-project.org/) Element that displays a static map (using [OpenStreetMap](http://www.openstreetmap.org)) of
-a provided address.
+a provided address or a set of geographic coordinates.
 
 > Maintained by [Marcin Warpechowski](https://github.com/warpech), 
 [Tomek Wytrębowicz](https://github.com/tomalec).
@@ -32,17 +32,19 @@ Please note that by default we use OpenStreetMap [API](http://wiki.openstreetmap
 3. Start using it!
 
     ```html
-    <static-openstreetmap query="Jumeira 3, Dubai"></static-openstreetmap>
+    <static-openstreetmap></static-openstreetmap>
     ```
 
 ## Options
 
+`query` or `lat`,`lng` set is required.
+
 Attribute  | Options                   | Default             | Description
 ---        | ---                       | ---                 | ---
 `query`    | *string*                  |                     | Address to search for.
-`width`    | *int*                     | `500`               | Image width
-`height`   | *int*                     | `355`               | Image height
-`zoom`     | *int*                     | `11`                | Zoom
+`width`    | *int*                     | `500`               | Image width in px
+`height`   | *int*                     | `355`               | Image height in px
+`zoom`     | *int*                     | `1`                 | Zoom
 `lat`      | *int*                     | `0`                 | Latitude
 `lng`      | *int*                     | `0`                 | Longitude
 
