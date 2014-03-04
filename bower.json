@@ -1,6 +1,6 @@
 {
   "name": "static-openstreetmap",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/warpech/static-openstreetmap",
   "authors": [
     "Marcin Warpechowski <marcin@nextgen.pl>",
