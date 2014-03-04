@@ -1,0 +1,49 @@
+<!--
+Copyright 2014 Marcin Warpechowski
+Use of this source code is governed by a MIT-style
+license that can be found in the LICENSE file.
+-->
+<link rel="import" href="../polymer/polymer.html">
+<polymer-element name="static-openstreetmap" attributes="query width height zoom lat lng">
+  <template>
+    <img hidden?="{{ !loaded }}"
+    src="http://staticmap.openstreetmap.de/staticmap.php?center={{lat}},{{lng}}&zoom={{zoom}}&size={{width}}x{{height}}">
+  </template>
+  <script>
+    Polymer('static-openstreetmap', {
+      loaded: false,
+      width: 500,
+      height: 355,
+      zoom: 11,
+      lat: 0,
+      lng: 0,
+      _cache: {},
+      enteredView: function () {
+      },
+      _loadData: function (data) {
+        this.lat = data.lat;
+        this.lng = data.lon;
+        this.loaded = true;
+      },
+      queryChanged: function () {
+        if (this._cache[this.query]) {
+          this._loadData(this._cache[this.query]);
+          return;
+        }
+
+        this.loaded = false;
+        var that = this;
+        var oReq = new XMLHttpRequest();
+        oReq.onload = function reqListener() {
+          var data = JSON.parse(this.responseText);
+          if (data[0]) {
+            that._loadData(data[0]);
+            that._cache[that.query] = data[0];
+          }
+        };
+        oReq.open("get", 'http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + this.query, true);
+        oReq.send();
+      }
+    });
+  </script>
+</polymer-element>
