@@ -37,7 +37,7 @@ license that can be found in the LICENSE file.
             that._cache[that.query] = data[0];
           }
         };
-        oReq.open("get", 'http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + this.query, true);
+        oReq.open("get", 'http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + encodeURIComponent(this.query), true);
         oReq.send();
       }
     });
