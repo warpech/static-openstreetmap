@@ -19,8 +19,8 @@ Please note that by default we use OpenStreetMap [API](http://wiki.openstreetmap
 1. Import Web Components' polyfill:
 
     ```html
-    <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.1.4/platform.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.1.4/polymer.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.2.0/platform.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.2.0/polymer.js"></script>
     ```
 
 2. Import Custom Element:
