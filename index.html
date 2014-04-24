@@ -7,6 +7,18 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.2.2/polymer.js"></script>
   
   <link rel="import" href="src/static-openstreetmap.html">
+
+  <style>
+    .mapContainer {
+      width: 400px;
+      height: 400px;
+      background-color: palegoldenrod;
+    }
+
+    input[type=number] {
+      width: 40px;
+    }
+  </style>
 </head>
 <body>
 
@@ -15,16 +27,23 @@
 <template id="tpl" bind>
   <div>
     <input value="{{ query }}">
-    Zoom: <input type="number" value="{{ zoom }}" style="width: 30px">
+    <label>Zoom: <input type="number" value="{{ zoom }}"></label>
+    <label>Width: <input type="number" value="{{ width }}"></label>
+    <label>Height: <input type="number" value="{{ height }}"></label>
+    (empty width or height means expand to available space)
   </div>
-  <static-openstreetmap query="{{ query }}" width="400" height="400" zoom="{{ zoom }}"></static-openstreetmap>
+    <div class="mapContainer">
+      <static-openstreetmap query="{{ query }}" width="{{ width }}" height="{{ height }}" zoom="{{ zoom }}"></static-openstreetmap>
+    </div>
 </template>
 
 <script>
   window.addEventListener('polymer-ready', function() {
     document.getElementById('tpl').model = {
       query: 'Jumeira 3, Dubai',
-      zoom: 10
+      zoom: 10,
+      width: 390,
+      height: 390
     }
   });
 </script>

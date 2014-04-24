@@ -5,41 +5,134 @@ license that can be found in the LICENSE file.
 -->
 <polymer-element name="static-openstreetmap" attributes="query width height zoom lat lng">
   <template>
-    <img hidden?="{{ lat==null || lng==null }}"
-    src="http://staticmap.openstreetmap.de/staticmap.php?center={{lat}},{{lng}}&zoom={{zoom}}&size={{width}}x{{height}}">
+    <template if="{{ lat != null && lng != null && reqWidth != null && reqHeight != null }}">
+      <div style="height: {{reqHeight}}px; width: {{reqWidth}}px; background-size: {{reqWidth}}px {{reqHeight}}px; background-image: url(http://staticmap.openstreetmap.de/staticmap.php?center={{lat}},{{lng}}&zoom={{zoom}}&size={{reqWidth}}x{{reqHeight}})"></div>
+    </template>
   </template>
   <script>
-    Polymer('static-openstreetmap', {
-      width: 500,
-      height: 355,
-      zoom: 1,
-      lat: null,
-      lng: null,
-      _cache: {},
-      enteredView: function () {
-      },
-      _loadData: function (data) {
-        this.lat = data.lat;
-        this.lng = data.lon;
-      },
-      queryChanged: function () {
-        if (this._cache[this.query]) {
-          this._loadData(this._cache[this.query]);
-          return;
-        }
-
-        var that = this;
-        var oReq = new XMLHttpRequest();
-        oReq.onload = function reqListener() {
-          var data = JSON.parse(this.responseText);
-          if (data[0]) {
-            that._loadData(data[0]);
-            that._cache[that.query] = data[0];
-          }
+    (function (global) {
+      // Underscore.js 1.6.0
+      // http://underscorejs.org
+      // (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+      // Underscore may be freely distributed under the MIT license.
+      
+      // Returns a function, that, when invoked, will only be triggered at most once
+      // during a given window of time. Normally, the throttled function will run
+      // as much as it can, without ever going more than once per `wait` duration;
+      // but if you'd like to disable the execution on the leading edge, pass
+      // `{leading: false}`. To disable execution on the trailing edge, ditto.
+      // @see https://github.com/jashkenas/underscore/blob/b28197bd2d00452f7958d06364650c1edd2226bd/underscore.js#L670
+      function throttle(func, wait, options) {
+        var context, args, result;
+        var timeout = null;
+        var previous = 0;
+        options || (options = {});
+        var later = function () {
+          previous = options.leading === false ? 0 : Date.now();
+          timeout = null;
+          result = func.apply(context, args);
+          context = args = null;
         };
-        oReq.open("get", 'http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + encodeURIComponent(this.query), true);
-        oReq.send();
+        return function () {
+          var now = Date.now();
+          if (!previous && options.leading === false) previous = now;
+          var remaining = wait - (now - previous);
+          context = this;
+          args = arguments;
+          if (remaining <= 0) {
+            clearTimeout(timeout);
+            timeout = null;
+            previous = now;
+            result = func.apply(context, args);
+            context = args = null;
+          } else if (!timeout && options.trailing !== false) {
+            timeout = setTimeout(later, remaining);
+          }
+          return result;
+        };
       }
-    });
+
+      Polymer('static-openstreetmap', {
+        width: null,
+        height: null,
+        reqWidth: null,
+        reqHeight: null,
+        zoom: 5,
+        lat: null,
+        lng: null,
+        _cache: {},
+        enteredView: function() {
+          this._listenOrUnlistenToContainerResize();
+        },
+        widthChanged: function () {
+          this._listenOrUnlistenToContainerResize();
+        },
+        heightChanged: function () {
+          this._listenOrUnlistenToContainerResize();
+        },
+        zoomChanged: function () {
+          if(this.zoom < 1) {
+            this.zoom = 1;
+          }
+        },
+        _listenOrUnlistenToContainerResize: function () {
+          if (this.width && this.height) {
+            this._unlistenToContainerResize();
+            this._setSizes(this.width, this.height);
+          }
+          else {
+            this._listenToContainerResize();
+          }
+        },
+        _setSizes: function (width, height) {
+          this.reqWidth = width;
+          this.reqHeight = height;
+        },
+        _listenToContainerResize: function () {
+          var setSizes = this._setSizes.bind(this);
+          setSizes = throttle(setSizes, 1000);
+
+          var that = this;
+          var checkSize = function () {
+            var width = that.width || that.parentNode.offsetWidth;
+            var height = that.height || that.parentNode.offsetHeight;
+            if (height == 0) {
+              height = width; //if height == 0 (height auto), use width for height
+            }
+            if (width != that.reqWidth || height != that.reqHeight) {
+              setSizes(width, height);
+            }
+            that._raf = global.requestAnimationFrame(checkSize);
+          };
+          this._raf = global.requestAnimationFrame(checkSize);
+          checkSize();
+        },
+        _unlistenToContainerResize: function () {
+          global.cancelAnimationFrame(this._raf);
+        },
+        _loadData: function (data) {
+          this.lat = data.lat;
+          this.lng = data.lon;
+        },
+        queryChanged: function () {
+          if (this._cache[this.query]) {
+            this._loadData(this._cache[this.query]);
+            return;
+          }
+
+          var that = this;
+          var oReq = new XMLHttpRequest();
+          oReq.onload = function reqListener() {
+            var data = JSON.parse(this.responseText);
+            if (data[0]) {
+              that._loadData(data[0]);
+              that._cache[that.query] = data[0];
+            }
+          };
+          oReq.open("get", 'http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + encodeURIComponent(this.query), true);
+          oReq.send();
+        }
+      });
+    })(window);
   </script>
 </polymer-element>
