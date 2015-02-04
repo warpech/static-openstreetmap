@@ -5,6 +5,7 @@ license that can be found in the LICENSE file.
 -->
 <polymer-element name="static-openstreetmap" attributes="query width height zoom lat lng">
   <template>
+    <style> :host{ display: block;}</style>
     <template if="{{ lat != null && lng != null && reqWidth != null && reqHeight != null }}">
       <div style="height: {{reqHeight}}px; width: {{reqWidth}}px; background-size: {{reqWidth}}px {{reqHeight}}px; background-image: url(http://staticmap.openstreetmap.de/staticmap.php?center={{lat}},{{lng}}&zoom={{zoom}}&size={{reqWidth}}x{{reqHeight}})"></div>
     </template>
@@ -61,7 +62,7 @@ license that can be found in the LICENSE file.
         lat: null,
         lng: null,
         _cache: {},
-        enteredView: function() {
+        domReady: function() {
           this._listenOrUnlistenToContainerResize();
         },
         widthChanged: function () {
