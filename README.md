@@ -3,7 +3,7 @@
 `<static-openstreetmap>` is a [Polymer](http://www.polymer-project.org/) Element that displays a static map (using [OpenStreetMap](http://www.openstreetmap.org)) of
 a provided address or a set of geographic coordinates.
 
-The actual rendering of the map is provided by [static.openstreetmap.de](http://staticmap.openstreetmap.de/) REST API.
+The actual rendering of the map is provided by [staticmap.openstreetmap.de](http://staticmap.openstreetmap.de/) REST API.
 
 > Maintained by [Marcin Warpechowski](https://github.com/warpech), 
 [Tomek Wytrębowicz](https://github.com/tomalec).
